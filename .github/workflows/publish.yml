@@ -2,21 +2,26 @@ name: Publish to NPM
 
 on:
   push:
-    branches:
-      - main
-  release:
-    types: [created]
+    tags:
+      - 'v*'   # 🔥 ONLY publish on version tags
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+
       - run: npm ci
+
+      - name: Build (optional)
+        run: npm run build || echo "no build step"
+
       - name: Publish to NPM
         run: npm publish
         env:
