@@ -2,27 +2,28 @@ name: Publish to NPM
 
 on:
   push:
-    tags:
-      - 'v*'   # 🔥 ONLY publish on version tags
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-
       - run: npm ci
-
       - name: Build (optional)
         run: npm run build || echo "no build step"
-
-      - name: Publish to NPM
-        run: npm publish
+      - name: Semantic Release
+        run: npx semantic-release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
