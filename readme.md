@@ -3,6 +3,13 @@
 ## 📌 Description
 `slug-wizard` is a lightweight, dependency-free NPM package that converts text into a URL-friendly slug. It also ensures uniqueness by checking against an existing list of slugs and appending a number if necessary.
 
+### 💖 Donate
+
+You can support the project here:
+
+- **Patreon:** https://www.patreon.com/cw/BABU_ISHU  
+- **PayPal:** https://www.paypal.com/ncp/payment/SECBQ62TRZZ6Y
+  
 ## 🚀 Features
 - **No dependencies** – Fully implemented in pure JavaScript.
 - **Removes special characters** – Keeps only alphanumeric characters and hyphens.
