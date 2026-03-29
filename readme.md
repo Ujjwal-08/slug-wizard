@@ -8,40 +8,69 @@
 - **Removes special characters** – Keeps only alphanumeric characters and hyphens.
 - **Handles Unicode characters** – Converts accented letters (e.g., `Café` → `cafe`).
 - **Ensures uniqueness** – Appends numbers if the slug already exists.
-- **Works in both frontend & backend** – Can be used in Node.js and browser environments.
+# Slug Wizard 🧙‍♂️
 
-## 📦 Installation
+Create unique, SEO-friendly, and customizable slugs for your applications.
 
-Install via NPM:
-```sh
+## Features
+- **Custom Separators**: Choose `-`, `_`, `.`, or anything else.
+- **Transliteration**: Automatically handle symbols like `&`, `+`, `@`.
+- **MaxLength**: Robust, word-safe truncation.
+- **Stopwords**: Easily strip common words.
+- **Unique Slugs**: Smart collision handling with counters or random suffixes.
+- **Async Support**: Check uniqueness against databases via callbacks.
+- **TypeScript**: Fully typed out of the box.
+
+## Installation
+```bash
 npm install slug-wizard
 ```
 
-Install via Yarn:
-```sh
-yarn add slug-wizard
+## Basic Usage
+```javascript
+import { createSlug } from 'slug-wizard';
+
+// Default (- separator, lowercase)
+console.log(createSlug("Hello World!")); // hello-world
+
+// Customizable
+console.log(createSlug("Fruit & Veggies", { separator: '_', stopWords: ['and'] })); 
+// fruit_veggies
 ```
 
-## 🛠 Usage
+## Advanced Usage
 
-### Basic Usage
+### Options Reference
+| Option | Default | Description |
+|---|---|---|
+| `separator` | `'-'` | Word separator character |
+| `lowercase` | `true` | Convert to lowercase |
+| `maxLength` | `Infinity` | Max length (word-safe) |
+| `stopWords` | `[]` | Words to remove |
+
+### Unique Slugs
 ```javascript
-const { createSlug, generateUniqueSlug } = require("slug-wizard");
+import { generateUniqueSlug } from 'slug-wizard';
 
-// Convert text into a URL-friendly slug
-console.log(createSlug("Hello World!")); // Output: "hello-world"
-console.log(createSlug("My First Post!!!")); // Output: "my-first-post"
-console.log(createSlug("Café & Bar")); // Output: "cafe-bar"
+const existing = ['my-post', 'my-post-1'];
+
+// With counter (default)
+console.log(generateUniqueSlug("My Post", { existingSlugs: existing })); 
+// my-post-2
+
+// With random suffix
+console.log(generateUniqueSlug("My Post", { existingSlugs: existing, randomSuffix: true })); 
+// my-post-x7f2
 ```
 
-### Ensuring Unique Slugs
+### Async Database Check
 ```javascript
-const existingSlugs = ["hello-world", "my-first-post", "awesome-slug"];
-
-console.log(generateUniqueSlug("Hello World", existingSlugs)); // Output: "hello-world-1"
-console.log(generateUniqueSlug("My First Post", existingSlugs)); // Output: "my-first-post-1"
-console.log(generateUniqueSlug("Awesome Slug", existingSlugs)); // Output: "awesome-slug-1"
-console.log(generateUniqueSlug("New Post", existingSlugs)); // Output: "new-post"
+const slug = await generateUniqueSlug("Premium Product", {
+  checkCallback: async (val) => {
+    const exists = await db.products.findFirst({ where: { slug: val } });
+    return !!exists;
+  }
+});
 ```
 
 ## 🛠 API Reference
